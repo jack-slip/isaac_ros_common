@@ -1,27 +1,44 @@
-#!/bin/bash -e
-#
-# Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
-#
-# NVIDIA CORPORATION and its licensors retain all intellectual property
-# and proprietary rights in and to this software, related documentation
-# and any modifications thereto.  Any use, reproduction, disclosure or
-# distribution of this software and related documentation without an express
-# license agreement from NVIDIA CORPORATION is strictly prohibited.
+#!/bin/bash
+
+# Safe print functions for both interactive and non-interactive terminals
+# Copyright (c) 2021-2024, NVIDIA CORPORATION.
 
 function print_color {
-    tput setaf $1
-    echo "$2"
-    tput sgr0
+    if [[ -n "$TERM" && -t 1 ]]; then
+        tput setaf "$1"
+        echo "$2"
+        tput sgr0
+    else
+        echo "$2"
+    fi
 }
 
 function print_error {
-    print_color 1 "$1"
+    if [[ -n "$TERM" && -t 1 ]]; then
+        tput setaf 1
+        echo "[ERROR] $1"
+        tput sgr0
+    else
+        echo "[ERROR] $1"
+    fi
 }
 
 function print_warning {
-    print_color 3 "$1"
+    if [[ -n "$TERM" && -t 1 ]]; then
+        tput setaf 3
+        echo "[WARNING] $1"
+        tput sgr0
+    else
+        echo "[WARNING] $1"
+    fi
 }
 
 function print_info {
-    print_color 2 "$1"
+    if [[ -n "$TERM" && -t 1 ]]; then
+        tput setaf 2
+        echo "[INFO] $1"
+        tput sgr0
+    else
+        echo "[INFO] $1"
+    fi
 }
