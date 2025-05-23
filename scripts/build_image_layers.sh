@@ -344,12 +344,14 @@ for (( i=${#DOCKERFILES[@]}-1 ; i>=0 ; i-- )); do
 
     print_warning "Building ${DOCKERFILE} as image: ${IMAGE_NAME} with base: ${BASE_IMAGE_NAME}"
 
-    DOCKER_BUILDKIT=${DOCKER_BUILDKIT} docker build -f ${DOCKERFILE} \
+    DOCKER_CMD="DOCKER_BUILDKIT=${DOCKER_BUILDKIT} docker build -f ${DOCKERFILE} \
      --network host \
      -t ${IMAGE_NAME} \
      ${BASE_IMAGE_ARG} \
-     "${BUILD_ARGS[@]}" \
-     "${ADDITIONAL_DOCKER_ARGS[@]}" \
+     ${BUILD_ARGS[@]} \
+     ${ADDITIONAL_DOCKER_ARGS[@]} \
      $@ \
-     ${DOCKER_CONTEXT_ARG}
+     ${DOCKER_CONTEXT_ARG}"
+    echo "[build_image_layers.sh] Running: $DOCKER_CMD"
+    eval $DOCKER_CMD
 done
